@@ -1,4 +1,4 @@
-## Checkpointing and restoring the SpringBoot PetClinic Application using OpenJDK CRaC
+## Checkpoint and restore the SpringBoot PetClinic app using OpenJDK CRaC
 
 This tutorial is a hands-on introduction to [OpenJDK CRaC (Co-ordinated Restore at Checkpoint)](https://openjdk.org/projects/crac/). It uses the popular [SpringBoot PetClinic](https://github.com/spring-projects/spring-petclinic) sample application. OpenJDK CRaC packages for [v17](https://launchpad.net/ubuntu/+source/openjdk-17-crac) and [v21](https://launchpad.net/ubuntu/+source/openjdk-21-crac) are introduced in Ubuntu, in the Oracular Oriole release.
 
