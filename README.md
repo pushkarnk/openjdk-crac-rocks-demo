@@ -149,7 +149,7 @@ Two things to note in the above command:
 
 You must now find a "fast-start" version of PetClinic up in less than 100ms! Try accessing http://localhost:8080 again.
 
-**THAT'S THE END OF THE TUTORIAL!**
+**That's all!**
 
 ### Limitations
 #### Restoring needs --privileged
