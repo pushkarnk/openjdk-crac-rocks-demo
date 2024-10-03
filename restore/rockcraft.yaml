@@ -1,0 +1,43 @@
+name: spring-petclinic-restorer
+version: 0.0.1
+summary: Spring Petclinic using OpenJDK CRaC
+description: |
+  This image can be used to restore a checkpointed Spring PetClinic
+  image, using OpenJDK CRaC.
+
+base: ubuntu@24.04 
+
+run-user: _daemon_
+
+platforms:
+  amd64:
+
+package-repositories:
+  - type: apt
+    ppa: pushkarnk/openjdk-crac-noble
+    priority: always
+
+services:
+  petclinic-restore:
+    override: replace
+    summary: SpringBoot PetClinic Restore
+    command: /usr/bin/java -XX:CRaCRestoreFrom=/checkpoint-data
+    startup: disabled
+
+parts:
+  openjdk-crac:
+    plugin: nil
+    overlay-packages:
+      - openjdk-17-crac-jdk-headless
+    overlay-script: |
+      chown root:root ${CRAFT_OVERLAY}/usr/lib/jvm/java-17-openjdk-crac-${CRAFT_ARCH_BUILD_FOR}/lib/criu
+      chmod u+s ${CRAFT_OVERLAY}/usr/lib/jvm/java-17-openjdk-crac-${CRAFT_ARCH_BUILD_FOR}/lib/criu
+
+  petclinic-restore:
+    after: [openjdk-crac]
+    plugin: dump
+    source: .
+    organize:
+      'checkpoint/*.img': /checkpoint-data
+      checkpoint/stats-dump: /checkpoint-data/stats-dump
+      spring-petclinic.jar: /jars/spring-petclinic.jar

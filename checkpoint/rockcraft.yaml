@@ -1,0 +1,61 @@
+name: spring-petclinic-checkpointer
+version: 0.0.1
+summary: Spring Petclinic using OpenJDK CRaC
+description: |
+  This image can be used to run Spring Petclinic and checkpoint it
+  using OpenJDK CRaC.
+
+base: ubuntu@24.04 
+
+run-user: _daemon_
+
+platforms:
+  amd64:
+
+package-repositories:
+  - type: apt
+    ppa: pushkarnk/openjdk-crac-noble
+    priority: always
+
+services:
+  petclinic:
+    override: replace
+    summary: SpringBoot PetClinic 
+    command: /scripts/start.sh 
+    startup: enabled
+
+  petclinic-checkpoint:
+    override: replace
+    summary: PetClinic Checkpoint Command
+    command: jcmd spring-petclinic JDK.checkpoint
+    startup: disabled
+
+parts:
+  openjdk-crac:
+    plugin: nil
+    overlay-packages:
+      - openjdk-17-crac-jdk-headless
+    overlay-script: |
+      chown root:root ${CRAFT_OVERLAY}/usr/lib/jvm/java-17-openjdk-crac-${CRAFT_ARCH_BUILD_FOR}/lib/criu
+      chmod u+s ${CRAFT_OVERLAY}/usr/lib/jvm/java-17-openjdk-crac-${CRAFT_ARCH_BUILD_FOR}/lib/criu
+
+  petclinic:
+    plugin: nil
+    source: https://github.com/pushkarnk/spring-petclinic.git
+    source-type: git
+    build-environment:
+      - JAVA_HOME: "/usr/lib/jvm/java-17-openjdk-${CRAFT_ARCH_BUILD_FOR}"
+    build-packages:
+      - openjdk-17-jdk-headless
+      - sudo
+    override-build: |
+      ./mvnw package
+      mkdir -p ${CRAFT_PART_INSTALL}/jars
+      cp ${CRAFT_PART_BUILD}/target/*-SNAPSHOT.jar ${CRAFT_PART_INSTALL}/jars/spring-petclinic.jar
+      craftctl default
+
+  script:
+    plugin: dump
+    source: scripts/
+    organize:
+      start.sh: /scripts/start.sh
