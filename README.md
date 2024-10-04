@@ -147,7 +147,18 @@ Two things to note in the above command:
  - The service being started is named `petclinic-restore`.
  - We use the `--privileged` option because the list of capabilities needed for restoring is quite long!
 
-You must now find a "fast-start" version of PetClinic up in less than 100ms! You may try accessing http://localhost:8080 again.
+You must now find a "fast-start" version of PetClinic up in less than 100ms! 
+```
+2024-10-03T19:09:27.361Z [pebble] Started daemon.
+2024-10-03T19:09:27.374Z [pebble] POST /v1/services 6.595124ms 202
+2024-10-03T19:09:27.381Z [pebble] Service "petclinic-restore" starting: /usr/bin/java -XX:CRaCRestoreFrom=/checkpoint-data
+2024-10-03T19:09:27.430Z [petclinic-restore] 2024-10-03T19:09:27.429Z  WARN 10015 --- [l-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=44m1s99ms692?s870ns).
+2024-10-03T19:09:27.433Z [petclinic-restore] 2024-10-03T19:09:27.432Z  INFO 10015 --- [Attach Listener] o.s.c.support.DefaultLifecycleProcessor  : Restarting Spring-managed lifecycle beans after JVM restore
+2024-10-03T19:09:27.440Z [petclinic-restore] 2024-10-03T19:09:27.440Z  INFO 10015 --- [Attach Listener] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2024-10-03T19:09:27.442Z [petclinic-restore] 2024-10-03T19:09:27.442Z  INFO 10015 --- [Attach Listener] o.s.c.support.DefaultLifecycleProcessor  : Spring-managed lifecycle restart completed (restored JVM running for 56 ms)
+```
+
+You may try accessing http://localhost:8080 again.
 
 **And that's all!**
 
