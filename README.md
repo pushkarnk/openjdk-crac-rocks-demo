@@ -147,13 +147,13 @@ Two things to note in the above command:
  - The service being started is named petclinic-restore (like it was petclinic in the checkpointing run)
  - We need the highly undesirable --privileged option because the list of capabilities needed for restoring is quite long!
 
-You must now find a "fast-start" version of PetClinic up in less than 100ms! Try accessing http://localhost:8080 again.
+You must now find a "fast-start" version of PetClinic up in less than 100ms! You may try accessing http://localhost:8080 again.
 
-**That's all!**
+**And that's all!**
 
 ### Limitations
 #### Restoring needs --privileged
-The "restore" action needs a [long list of capabilities](https://github.com/checkpoint-restore/criu/issues/684#issuecomment-486882692). I have used --privileged to keep things simple. But, this will not be acceptable in production. Just to make it a little less unacceptable we could stuff all of these capabilities in a docker-compose.yaml and use docker-compose to bring the container up.
+The "restore" action needs a [long list of capabilities](https://github.com/checkpoint-restore/criu/issues/684#issuecomment-486882692). I have used --privileged to keep things simple. But, this may not be acceptable for apps in production. To make it look better, we could stuff all of the required capabilities in a docker-compose.yaml and use docker-compose to bring the container up.
 
 #### PID collisions and a way to avoid them
-When CRIU restores a process it reuses the same PID as that of the checkpointed process. In a container, this can cause [PID collisions](https://docs.azul.com/core/release/july-2023/crac/crac-debugging#restore-conflict-of-pids) because a tree of processes is being run during restore. It is very likely for "fixed" PID, of the process being restored, to collide with that of a process used in the restore process. We have an [awkard work-around](https://github.com/pushkarnk/openjdk-crac-rocks-demo/blob/main/checkpoint/scripts/start.sh#L2) to make sure the checkpointed process has a large PID!
+When CRIU restores a process it reuses the same PID as that of the checkpointed process. In a container, this can cause [PID collisions](https://docs.azul.com/core/release/july-2023/crac/crac-debugging#restore-conflict-of-pids) because a tree of processes is being run during restore. It is very likely for "fixed" PID, of the process being restored, to collide with that of a process used in the restore process. We have a [work-around](https://github.com/pushkarnk/openjdk-crac-rocks-demo/blob/main/checkpoint/scripts/start.sh#L2) to make sure the checkpointed process has a large PID!
