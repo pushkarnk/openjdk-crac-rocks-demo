@@ -65,13 +65,13 @@ The checkpointer Rock has a service named [petclinic](https://github.com/pushkar
     --args petclinic \; --verbose start petclinic
 ```
 Here is the breakdown of the command:
- - _-p 8080:8080_: Requests received on host-port 8080 will be published to container-port 8080. This means the PetClinic service will be available to the host as well.
- - _--cap-add=CHECKPOINT_RESTORE --cap-add=SYS_PTRACE_: these capabilities are necessary for checkpointing to work in the Docker container
- - _-v $PWD/data:/var/lib/pebble/default/crac-files_: mount host-directory $PWD/data to the container location where the checkpoint data will be dumped by criu
- - _--rm_: delete the container after this command completes
- - _--name springboot-petclinic-checkpointer_: name of the resulting container
- - _spring-petclinic-checkpointer:0.0.1_: the Docker image that we want to use
- - _--args petclinic \; --verbose start petclinic_: these args are forwarded to the [Pebble](https://documentation.ubuntu.com/rockcraft/en/latest/explanation/pebble/) daemon that is run (by default) by rock images. In short, we are running the [petclinic service]([see here](https://github.com/pushkarnk/openjdk-crac-rocks-demo/blob/main/checkpoint/rockcraft.yaml#L21)) with _--verbose_ causing the service logs to be included in the pebble logs.
+ - `-p 8080:8080`: Requests received on host-port 8080 will be published to container-port 8080. This means the PetClinic service will be available to the host as well.
+ - `--cap-add=CHECKPOINT_RESTORE --cap-add=SYS_PTRACE`: these capabilities are necessary for checkpointing to work in the Docker container
+ - `-v $PWD/data:/var/lib/pebble/default/crac-files`: mount host-directory $PWD/data to the container location where the checkpoint data will be dumped by criu
+ - `--rm`: delete the container after this command completes
+ - `--name springboot-petclinic-checkpointer`: name of the resulting container
+ - `spring-petclinic-checkpointer:0.0.1`: the Docker image that we want to use
+ - `--args petclinic \; --verbose start petclinic`: these args are forwarded to the [Pebble](https://documentation.ubuntu.com/rockcraft/en/latest/explanation/pebble/) daemon that is run (by default) by rock images. In short, we are running the [petclinic service]([see here](https://github.com/pushkarnk/openjdk-crac-rocks-demo/blob/main/checkpoint/rockcraft.yaml#L21)) with _--verbose_ causing the service logs to be included in the pebble logs.
 
 You must be able to see the PetClinic initialisation along with its ascii art. The PetClinic application should be up in 5-6 seconds.
 ```
@@ -144,8 +144,8 @@ sudo docker run \
   --args petclinic-restore \; --verbose start petclinic-restore
 ```
 Two things to note in the above command:
- - The service being started is named petclinic-restore (like it was petclinic in the checkpointing run)
- - We need the highly undesirable --privileged option because the list of capabilities needed for restoring is quite long!
+ - The service being started is named `petclinic-restore`.
+ - We use the `--privileged` option because the list of capabilities needed for restoring is quite long!
 
 You must now find a "fast-start" version of PetClinic up in less than 100ms! You may try accessing http://localhost:8080 again.
 
